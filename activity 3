@@ -1,0 +1,158 @@
+"""
+Students: Meera Alshara, Syed Hossain, Caesar Al Shdaifat
+contribution of Syed: 
+contribution of Caesar: 
+contribution of Meera: load_data function & docstring
+Description: 
+
+Repository Links:
+Syed : 
+Meera : https://github.com/meeralshara/gcis123/new/main
+Caesar : 
+"""
+import csv
+
+def load_data():
+    """this function will prompt the user to put the correct csv file path and then 
+    puts the data into lists and then returns the header and data"""
+    while True:
+        file_path = input("Stage 1: Load Data\nPlease enter the path to the CSV file: ")
+        if not file_path.endswith('.csv'): #if the file path entered by the user is incorrect the user enters it again
+            print("Invalid file format. Please enter a path to a CSV file.")
+        else:
+            try:
+                with open(file_path, 'r') as file:
+                    file_name_reader = csv.reader(file)
+                    header = next(file_name_reader)
+                    data = [line for line in file_name_reader]
+
+                print("\nFile exists.")
+                print("Loading file...")
+                print("File successfully loaded!\n")
+                print("Loaded Data: ")
+                for line in data:
+                    print(line)
+                return header, data
+            except FileNotFoundError:
+                print("File not found. Please enter a valid file path.")
+            except ValueError:
+                print("Non-numerical column, please try again.")
+
+def clean_and_prepare_data(column):
+    """this function prompts the user to chose between 3 types of calculation ways to replace the rows
+       in the file with the final result of the chosen calculation type"""
+    while True:
+        print("Replace empty cells with:")
+        print("1. Minimum value")
+        print("2. Maximum value")
+        print("3. Average value")
+        choice = input("Enter your choice (1/2/3): ")
+
+        if choice in ['1', '2', '3']:
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2, or 3.")
+
+    values = [float(val) for val in column if val.strip()]
+    if not values:
+        print("No valid data in the column to calculate.")
+        return column
+
+    if choice == '1':
+        replacement_value = min(values)
+    elif choice == '2':
+        replacement_value = max(values)
+    else:
+        replacement_value = sum(values) / len(values)
+
+    column = [replacement_value if val.strip() == '' else float(val) for val in column]
+    print("Data cleaned and prepared successfully.")
+    print("Updated Column:")
+    for value in column:
+        print(value)
+    return column
+
+def analyze_and_sort_data(data):
+    "this function makes the user chose a sorting order and colomn and then returns it"
+    print()
+    print("Stage 3: Analyze and Sort data")
+    print("Choose sorting order:")
+    print("1. Ascending order")
+    print("2. Descending order")
+    while True:
+        order = input("Enter your choice: ")
+        if order in ['1', '2']:
+            break
+        print("Invalid option. Please choose 1 or 2.")
+
+    print("Choose the column to sort:")
+    for i, col_name in enumerate(data[0]):
+        print(f"{i + 1} {col_name.strip()}")
+    while True:
+        col_index = input("Enter the index of the column to sort: ")
+        if col_index.isdigit():
+            col_index = int(col_index)
+            if 0 < col_index <= len(data[0]):
+                break
+        print("Invalid input. Please enter a valid column index.")
+
+    col_index -= 1  # Adjust for 0-based indexing
+    column_to_sort = [row[col_index] for row in data[1:]]  # Exclude header row
+
+    while True:
+        try:
+            sort_option = int(order)
+            if sort_option == 1:
+                sorted_column = sorted(column_to_sort)
+            elif sort_option == 2:
+                sorted_column = sorted(column_to_sort, reverse=True)
+            else:
+                print("Invalid choice! Please enter a valid option.")
+                continue
+            print(f"Column '{data[0][col_index]}' sorted in {'descending' if sort_option == 2 else 'ascending'} order!\n")
+            print("Sorted Data:")
+            print(data[0])  # Print header row
+            for value in sorted_column:
+                print(value)
+            print("Data analyzed and sorted successfully.")
+            return data
+        except ValueError:
+            print("Invalid input! Please enter a valid numeric value.")
+
+
+
+def visualize_data(data):
+    "this function prints all the sorted data visually "
+    print()
+    print("Stage 4: Visualize Data")
+    print("Legend: each '*' represents 5 units")
+    print()
+    col_name = input("Enter the column name you want to represent: ")
+    units_column = [int(float(row[1])) // 5 for row in data if row[0] == col_name.strip()]
+    for units in units_column:
+        print('*' * units)
+    print("Updated Data:")
+    for row in data:
+        print(row)
+
+def main():
+    print("---------------------------------")
+    print("Welcome to Data Analysis CLI")
+    print("---------------------------------")
+    print("Program stages:\n ")
+    print("1. Load Data\n2. Clean and prepare data\n3. Analyze Data\n4. Visualize Data\n")
+  
+    header, data = load_data()
+    column_to_clean = [row[2] for row in data]  # Assuming the third column needs cleaning
+    cleaned_column = clean_and_prepare_data(column_to_clean)
+    # Update the original data with the cleaned column
+    for row, cleaned_value in zip(data, cleaned_column):
+        row[2] = cleaned_value
+
+    # Proceed with other stages...
+    sorted_data = analyze_and_sort_data(data)
+    visualize_data(sorted_data)
+    print("\nVisualisation completed!\nThank you and goodbye!")
+
+if __name__ == "__main__":
+    main()
