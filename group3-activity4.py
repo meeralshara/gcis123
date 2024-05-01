@@ -1,6 +1,6 @@
 '''Students: Meera ALshara & Syed Wasti
     Repository Links: 
-    Meera: https://github.com/meeralshara/gcis123/new/main
+    Meera: https://github.com/meeralshara/gcis123/edit/main/group3-activity4.py
     Syed: '''
 
 import csv
