@@ -1,7 +1,8 @@
 '''Students: Meera ALshara & Syed Wasti
     Repository Links: 
     Meera: https://github.com/meeralshara/gcis123/edit/main/group3-activity4.py
-    Syed: '''
+    Syed: https://github.com/VideoPants/Group4-activity4
+'''
 
 import csv
 
@@ -142,5 +143,5 @@ def main():
         else:
             print("Invalid choice. Please try again.")
 
-if _name_ == "_main_":
+if __name__ == "_main_":
     main()
